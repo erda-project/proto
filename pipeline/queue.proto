@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package erda.pipeline;
+
+option go_package = "github.com/erda-project/erda-proto-go/pipeline/pb";
+
+import "google/protobuf/timestamp.proto";
+import "github.com/erda-project/erda-proto/pipeline/source.proto";
+
+enum QueueScheduleStrategy {
+  FIFO = 0;
+}
+
+enum QueueMode {
+  STRICT = 0;
+  LOOSE = 1;
+}
+
+message Queue {
+  uint64 id = 1;
+
+  string name = 2;
+  PipelineSource pipelineSource = 3;
+  string clusterName = 4;
+  QueueScheduleStrategy scheduleStrategy = 5;
+  QueueMode mode = 6;
+  int64 priority = 7;
+  int64 concurrency = 8;
+  float maxCPU = 9;
+  float maxMemoryMB = 10;
+
+  map<string, string> labels = 11;
+
+  google.protobuf.Timestamp timeCreated = 12;
+  google.protobuf.Timestamp timeUpdated = 13;
+}
+
+// QueueCreateRequest represents queue create request.
+message QueueCreateRequest {
+  // Name is the queue name.
+  // +required
+  string name = 1;
+
+  // PipelineSource group queues by source.
+  // +required
+  PipelineSource pipelineSource = 2;
+
+  // ClusterName represents which cluster this queue belongs to.
+  // +required
+  string clusterName = 3;
+
+  // ScheduleStrategy defines schedule strategy.
+  // If not present, will use default strategy.
+  // +optional
+  QueueScheduleStrategy scheduleStrategy = 4;
+
+  // Mode defines queue mode.
+  // If not present, will use default mode.
+  // +optional
+  QueueMode mode = 5;
+
+  // Priority defines item default priority inside queues.
+  // Higher number means higher priority.
+  // If not present, will use default priority.
+  // +optional
+  int64 priority = 6;
+
+  // Concurrency defines how many item can running at the same time.
+  // If not present, will use default concurrency.
+  // +optional
+  int64 concurrency = 7;
+
+  // MaxCPU is the cpu resource this queue holds.
+  // +optional
+  float maxCPU = 8;
+
+  // MaxMemoryMB is the memory resource this queue holds.
+  // +optional
+  float maxMemoryMB = 9;
+
+  // Labels contains the other infos for this queue.
+  // Labels can be used to query and filter queues.
+  // +optional
+  map<string, string> labels = 10;
+
+  // IdentityInfo
+  string userID = 11;
+  string internalClient = 12;
+}

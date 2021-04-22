@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package erda.pipeline;
+
+option go_package = "github.com/erda-project/erda-proto-go/pipeline/pb";
+
+enum PipelineSource {
+  DEFAULT = 0;
+}
